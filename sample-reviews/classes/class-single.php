@@ -165,7 +165,7 @@ class Single {
 
       $ids[] = wp_insert_comment( $args );
 
-      \WC_Comments::clear_transients( $review['product_id'] );
+      \WC_Comments::clear_transients( intval( $product_id ) );
 
     }
 
