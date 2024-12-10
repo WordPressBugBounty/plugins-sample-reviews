@@ -14,11 +14,11 @@ class Single {
 
   private $settings = [];
 
-	/**
-	 * Constructor
-	 */
+  /**
+   * Constructor
+   */
 
-	public function __construct(){
+  public function __construct(){
 
     add_action( 'admin_menu', array( $this, 'admin_menu' ), 20 );
 
@@ -28,56 +28,56 @@ class Single {
   }
 
   /**
-	 * Admin menu page actions
-	 */
+   * Admin menu page actions
+   */
 
-	public function admin_menu()
- 	{
+  public function admin_menu()
+  {
 
     $labels = [
-			'parent_slug' => 'sample-reviews',
+      'parent_slug' => 'sample-reviews',
       'slug' => 'wpdsr-add-review',
-			'title' => 'Add single review',
-		];
+      'title' => 'Add single review',
+    ];
 
- 		$page = add_submenu_page(
- 			$labels['parent_slug'],
- 			$labels['title'],
- 			$labels['title'],
- 			'activate_plugins',
- 			$labels['slug'],
- 			array( $this, 'callback' )
- 		);
+    $page = add_submenu_page(
+      $labels['parent_slug'],
+      $labels['title'],
+      $labels['title'],
+      'activate_plugins',
+      $labels['slug'],
+      array( $this, 'callback' )
+    );
 
     // Fires when styles are printed for a specific admin page based on $hook_suffix.
- 		add_action('admin_print_styles-'. $page, array( $this, 'enqueue_dashboard' ));
- 	}
+    add_action('admin_print_styles-'. $page, array( $this, 'enqueue_dashboard' ));
+  }
 
   /**
-	 * Enqueue plugin pages styles
-	 */
+   * Enqueue plugin pages styles
+   */
 
-	public function enqueue_dashboard(){
+  public function enqueue_dashboard(){
 
     wp_enqueue_style( 'wpdsr-select2', WPDSR_URL .'assets/css/select2.min.css', [], WPDSR_VERSION );
-		wp_enqueue_style( 'wpdsr-dashboard', WPDSR_URL .'assets/css/dashboard.css', [], WPDSR_VERSION );
+    wp_enqueue_style( 'wpdsr-dashboard', WPDSR_URL .'assets/css/dashboard.css', [], WPDSR_VERSION );
 
     wp_enqueue_script( 'wpdsr-select2', WPDSR_URL .'assets/js/select2.min.js', ['jquery'], WPDSR_VERSION, true );
-	  wp_enqueue_script( 'wpdsr-dashboard', WPDSR_URL .'assets/js/dashboard.js', ['jquery'], WPDSR_VERSION, true );
+    wp_enqueue_script( 'wpdsr-dashboard', WPDSR_URL .'assets/js/dashboard.js', ['jquery'], WPDSR_VERSION, true );
 
-	}
+  }
 
-	/**
-	 * Template
-	 */
+  /**
+   * Template
+   */
 
-	public function callback(){
+  public function callback(){
 
     $this->settings = $this->set_settings();
 
-		include_once WPDSR_DIR .'classes/templates/single.php';
+    include_once WPDSR_DIR .'classes/templates/single.php';
 
-	}
+  }
 
   /**
    * Ajax | Search for product
@@ -88,28 +88,28 @@ class Single {
     check_ajax_referer( 'wpdsr_add', 'wpdsr_nonce' );
 
     if( empty($_POST['search']) ){
-			wp_die();
-		}
+      wp_die();
+    }
 
     $search = sanitize_text_field( $_POST['search'] );
     $search = wp_unslash( $search );
 
-		$args = array(
-			'post_status'    => 'publish',
-			'post_type'      => 'product',
-			'posts_per_page' => 30,
-			's'              => $search
-		);
+    $args = array(
+      'post_status'    => 'publish',
+      'post_type'      => 'product',
+      'posts_per_page' => 30,
+      's'              => $search
+    );
 
-		$products = get_posts( $args );
+    $products = get_posts( $args );
 
     $return = [];
 
-		foreach ( $products as $product ) {
-			$return[] = [ 'id' => $product->ID, 'text' => esc_html( $product->post_title ) ];
-		}
+    foreach ( $products as $product ) {
+      $return[] = [ 'id' => $product->ID, 'text' => esc_html( $product->post_title ) ];
+    }
 
-		wp_send_json( $return );
+    wp_send_json( $return );
 
   }
 
@@ -129,7 +129,7 @@ class Single {
 
     $post['rating'] = intval( sanitize_text_field($_POST['wpdsr']['rating']) );
 
-    $post['review'] = wp_unslash( esc_html( sanitize_text_field($_POST['wpdsr']['review']) ) );
+    $post['review'] = wp_unslash( wp_kses_post( $_POST['wpdsr']['review']) );
     $post['author'] = wp_unslash( esc_html( sanitize_text_field($_POST['wpdsr']['author']) ) );
 
     $email = urlencode($post['author']) .'@sample_review_for_woocommerce.com';
@@ -202,7 +202,7 @@ class Single {
         'type' => 'textarea',
         'id' => 'review',
         'title' => __('Review', 'wpdsr'),
-        'desc' => __('Review content in plain text', 'wpdsr'),
+        'desc' => __('Basic HTML tags allowed <p>, <br>, <strong>, <em>, <ul>, <ol>, <li>, <a>', 'wpdsr'),
         'std' => '',
       ],
 

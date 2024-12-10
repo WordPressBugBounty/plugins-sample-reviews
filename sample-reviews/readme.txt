@@ -4,7 +4,7 @@ Tags: review, reviews, woocommerce reviews, sample reviews
 Requires at least: 6.0
 Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,9 @@ You will find **Sample Reviews** menu in your WordPress admin screen.
 3. Settings
 
 == Changelog ==
+
+= 1.0.2 =
+* Added: Single review - Basic HTML tags allowed in review content
 
 = 1.0.1 =
 * Fixed: PHP Warning: Undefined variable $review

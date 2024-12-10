@@ -7,14 +7,14 @@ Author URI: https://wpdot.org
 Text Domain: wpdsr
 Requires at least: 5.6
 Requires PHP: 7.0
-Version: 1.0.1
+Version: 1.0.2
 */
 
 defined( 'ABSPATH' ) || exit;
 
 // define
 
-define( 'WPDSR_VERSION', '1.0.1' );
+define( 'WPDSR_VERSION', '1.0.2' );
 define( 'WPDSR_DIR', plugin_dir_path( __FILE__ ) ); // with /
 define( 'WPDSR_URL', plugin_dir_url( __FILE__ ) ); // with /
 define( 'WPDSR_FILE', plugin_basename( __FILE__ ) ); // with /
